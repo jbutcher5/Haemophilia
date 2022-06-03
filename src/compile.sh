@@ -1,3 +1,3 @@
-#/bin/sh
+#!/bin/sh
 
-clang main.c -lraylib -ldl -pthread -lGL -lm
+clang main.c -lraylib -ldl -pthread -lGL -lm -g
