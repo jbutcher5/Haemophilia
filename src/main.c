@@ -46,7 +46,7 @@ int main(){
 
         ClearBackground(RAYWHITE);
 
-        BeginMode3D(*player->camera);
+        BeginMode3D(player->camera);
         DrawCubeV((Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}, RED);
 
         EndMode3D();
