@@ -9,19 +9,18 @@
 typedef struct Player {
     Vector3* position;
     Vector3 size;
+    Vector2 theta;
     Camera3D camera;
 } Player;
 
-Vector3 rotateVector(const Vector3 v, const float theta[2]) {
+Vector3 rotateVector(const Vector3 v, const Vector2 theta) {
     Vector3 result = v;
 
-    // Z matrix rotation
-    result.x = cosf(theta[0]) * v.x - sinf(theta[0]) * v.y;
-    result.y = sinf(theta[0]) * v.x + cosf(theta[0]) * v.y;
+    result.x = cosf(theta.x) * v.x - sinf(theta.x) * v.y;
+    result.y = sinf(theta.x) * v.x + cosf(theta.x) * v.y;
 
-    // Y matrix rotation
-    result.z = -sinf(theta[1]) * result.x + cosf(theta[1]) * result.z;
-    result.x = cosf(theta[1]) * result.x + sinf(theta[1]) * result.z;
+    result.z = -sinf(theta.y) * result.x + cosf(theta.y) * result.z;
+    result.x = cosf(theta.y) * result.x + sinf(theta.y) * result.z;
 
     return result;
 }
@@ -39,15 +38,18 @@ Player* InitPlayer(const Vector3 position, const Vector3 size) {
 
     allocation->position = &allocation->camera.position;
     allocation->size = size;
+    allocation->theta = (Vector2){0.f, 0.f};
 
     return allocation;
 }
 
 void UpdatePlayer(Player* player) {
     Vector2 mouseDelta = GetMouseDelta();
-    float theta[2] = {(-mouseDelta.y/75), (-mouseDelta.x/75)};
+    Vector2 deltaTheta = {(-mouseDelta.y/75), (-mouseDelta.x/75)};
 
-    player->camera.target = rotateVector(player->camera.target, theta);
+    player->theta = Vector2Add(player->theta, deltaTheta);
+
+    player->camera.target = rotateVector(player->camera.target, deltaTheta);
 }
 
 int main(){
