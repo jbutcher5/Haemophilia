@@ -10,7 +10,21 @@ typedef struct Player {
     Camera3D camera;
 } Player;
 
-Player* InitPlayer(Vector3 position, Vector3 size) {
+Vector3 rotateVector(const Vector3 v, const float theta[2]) {
+    Vector3 result = v;
+
+    // Z matrix rotation
+    result.x = cosf(theta[0]) * v.x - sinf(theta[0]) * v.y;
+    result.y = sinf(theta[0]) * v.x + cosf(theta[0]) * v.y;
+
+    // Y matrix rotation
+    result.z = -sinf(theta[1]) * result.x + cosf(theta[1]) * result.z;
+    result.x = cosf(theta[1]) * result.x + sinf(theta[1]) * result.z;
+
+    return result;
+}
+
+Player* InitPlayer(const Vector3 position, const Vector3 size) {
     Player* allocation = (Player*)malloc(sizeof(Player));
 
     allocation->camera = (Camera3D){
