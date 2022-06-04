@@ -31,7 +31,7 @@ Player* InitPlayer(const Vector3 position, const Vector3 size) {
         position,
         (Vector3){ 1.0f, 0.0f, 0.0f },
         (Vector3){ 0.0f, 1.0f, 0.0f },
-        45.f,
+        80.f,
         CAMERA_PERSPECTIVE,
     };
 
@@ -40,9 +40,12 @@ Player* InitPlayer(const Vector3 position, const Vector3 size) {
 
     return allocation;
 }
-/*
+
 void UpdatePlayer(Player* player) {
-    UpdateCamera(player->camera);
+    Vector2 mouseDelta = GetMouseDelta();
+    float theta[2] = {(-mouseDelta.y/75), (-mouseDelta.x/75)};
+
+    player->camera.target = rotateVector(player->camera.target, theta);
 }
 
 int main(){
