@@ -1,8 +1,10 @@
 #include <raylib.h>
+#include <raymath.h>
+#include <math.h>
 #include <stdlib.h>
 
-#define WIDTH 800
-#define HEIGHT 450
+#define WIDTH 960
+#define HIEGHT 540
 
 typedef struct Player {
     Vector3* position;
@@ -49,7 +51,8 @@ void UpdatePlayer(Player* player) {
 }
 
 int main(){
-    InitWindow(WIDTH, HEIGHT, "Haemophilia");
+    InitWindow(WIDTH, HIEGHT, "Haemophilia");
+    DisableCursor();
 
     Player* player = InitPlayer((Vector3){0.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f});
 
