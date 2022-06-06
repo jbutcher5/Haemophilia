@@ -2,7 +2,6 @@
 #include <raymath.h>
 #include <math.h>
 #include <stdlib.h>
-#include <float.h>
 
 #define WIDTH 960
 #define HIEGHT 540
@@ -10,14 +9,20 @@
 #define MODULO(a, n) fmod((a), (n)) + (((a) < 0) * (n))
 
 typedef struct Player {
-    Vector3* position;
+    Vector3 position;
     Vector3 size;
-    float thetaY;
-    float thetaZ;
-    Camera3D camera;
+    Vector3 target;
+    Vector2 theta;
 } Player;
 
-Vector3 rotateVectorY(const Vector3 v, const float theta) {
+static Player player = {
+    (Vector3){0.f, 0.0f, 0.0f},
+    (Vector3){2.f, 2.f, 2.f},
+    (Vector3){4.f, 0.0f, 0.0f},
+    (Vector2){0.f, 0.f}
+};
+
+Vector3 rotateVectorVertical(const Vector3 v, const float theta) {
     Vector3 result = v;
 
     result.x = cosf(-theta) * v.x - sinf(-theta) * v.y;
@@ -26,7 +31,7 @@ Vector3 rotateVectorY(const Vector3 v, const float theta) {
     return result;
 }
 
-Vector3 rotateVectorZ(const Vector3 v, const float theta) {
+Vector3 rotateVectorHorizontal(const Vector3 v, const float theta) {
     Vector3 result = v;
 
     result.z = -sinf(-theta) * v.x + cosf(-theta) * v.z;
@@ -35,24 +40,24 @@ Vector3 rotateVectorZ(const Vector3 v, const float theta) {
     return result;
 }
 
-Player* InitPlayer(const Vector3 position, const Vector3 size) {
-    Player* allocation = (Player*)malloc(sizeof(Player));
+void UpdatePlayer() {
+    Vector2 mouseDelta = GetMouseDelta();
 
-    allocation->camera = (Camera3D){
-        position,
-        (Vector3){1073741824.f, 0.0f, 0.0f},
-        (Vector3){0.0f, 1.f, 0.0f},
-        60.f,
-        CAMERA_PERSPECTIVE,
-    };
+    Vector2 delta = {mouseDelta.x/75, mouseDelta.y/75};
 
-    allocation->position = &allocation->camera.position;
-    allocation->size = size;
+    player.theta.y = MODULO(player.theta.y + delta.y, M_PI);
+    player.theta.x = MODULO(player.theta.x + delta.x, 2*M_PI);
+    player.target = rotateVectorHorizontal(player.target, delta.x);
+    player.target = rotateVectorVertical(player.target, delta.y);
 
-    allocation->thetaY = 0.f;
-    allocation->thetaZ = 0.f;
+    Vector2 direction = (Vector2){cosf(player.theta.x)*.25f, sinf(player.theta.x)*.25f};
 
-    return allocation;
+    if (IsKeyDown(KEY_W)) {
+        player.position.x += direction.x;
+        player.position.z += direction.y;
+        player.target.x += direction.x;
+        player.target.z += direction.y;
+    }
 }
 
 void UpdatePlayer(Player* player) {
@@ -93,13 +98,11 @@ int main(){
     InitWindow(WIDTH, HIEGHT, "Haemophilia");
     DisableCursor();
 
-    Player* player = InitPlayer((Vector3){0.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f});
-
     SetTargetFPS(60);
 
     while (!WindowShouldClose()) {
 
-        UpdatePlayer(player);
+        UpdatePlayer();
 
         BeginDrawing();
 
