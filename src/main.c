@@ -27,8 +27,12 @@ static Player player = {
 Vector3 rotateVectorVertical(const Vector3 v, const float theta) {
     Vector3 result = v;
 
-    result.x = cosf(-theta) * v.x - sinf(-theta) * v.y;
-    result.y = sinf(-theta) * v.x + cosf(-theta) * v.y;
+    float horizontalLength = sqrtf(v.x*v.x + v.z*v.z);
+    float horizontalNew = cosf(theta) * horizontalLength - sinf(theta) * v.y;
+
+    result.x = cosf(player.theta.x) * horizontalNew;
+    result.z = sinf(player.theta.x) * horizontalNew;
+    result.y = sinf(theta) * horizontalLength + cosf(theta) * v.y;
 
     return result;
 }
@@ -36,8 +40,8 @@ Vector3 rotateVectorVertical(const Vector3 v, const float theta) {
 Vector3 rotateVectorHorizontal(const Vector3 v, const float theta) {
     Vector3 result = v;
 
-    result.z = -sinf(-theta) * v.x + cosf(-theta) * v.z;
-    result.x = cosf(-theta) * v.x + sinf(-theta) * v.z;
+    result.x = cosf(theta) * v.x - sinf(theta) * v.z;
+    result.z = sinf(theta) * v.x + cosf(theta) * v.z;
 
     return result;
 }
@@ -47,10 +51,11 @@ void UpdatePlayer() {
 
     Vector2 delta = {mouseDelta.x/75, mouseDelta.y/75};
 
-    player.theta.y = MODULO(player.theta.y + delta.y, M_PI);
-    player.theta.x = MODULO(player.theta.x + delta.x, 2*M_PI);
+    player.theta.y = atan2f(player.target.y, player.target.z);
+    player.theta.x = atan2f(player.target.z, player.target.x);
+
+    player.target = rotateVectorVertical(player.target, -delta.y);
     player.target = rotateVectorHorizontal(player.target, delta.x);
-    player.target = rotateVectorVertical(player.target, delta.y);
 
     Vector2 direction = (Vector2){cosf(player.theta.x)*.25f, sinf(player.theta.x)*.25f};
 
