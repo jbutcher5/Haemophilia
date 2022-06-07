@@ -47,13 +47,9 @@ Vector3 rotateVectorHorizontal(const Vector3 v, const float theta) {
 }
 
 void UpdatePlayer() {
-    static Vector2 previousMousePosition = {0.f, 0.f};
-    Vector2 mousePosition = GetMousePosition();
-    Vector2 mouseDelta = Vector2Subtract(mousePosition, previousMousePosition);
+    Vector2 mouseDelta = GetMouseDelta();
 
-    previousMousePosition = mousePosition;
-
-    Vector2 delta = {mouseDelta.x/75, mouseDelta.y/75};
+    Vector2 delta = {mouseDelta.x/100, mouseDelta.y/100};
 
     player.theta.y = atan2f(player.target.y, player.target.z);
     player.theta.x = atan2f(player.target.z, player.target.x);
