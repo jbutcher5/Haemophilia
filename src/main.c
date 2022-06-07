@@ -62,8 +62,6 @@ void UpdatePlayer() {
     if (IsKeyDown(KEY_W)) {
         player.position.x += direction.x;
         player.position.z += direction.y;
-        player.target.x += direction.x;
-        player.target.z += direction.y;
     }
 }
 
@@ -82,7 +80,7 @@ void StartDisplay() {
     rlMatrixMode(RL_MODELVIEW);
     rlLoadIdentity();
 
-    Matrix matView = MatrixLookAt(player.position, player.target, (Vector3){0.f, 1.f, 0.f});
+    Matrix matView = MatrixLookAt(player.position, Vector3Add(player.target, player.position), (Vector3){0.f, 1.f, 0.f});
     rlMultMatrixf(MatrixToFloat(matView));
 
     rlEnableDepthTest();
