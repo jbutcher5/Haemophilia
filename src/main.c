@@ -4,8 +4,6 @@
 #include <math.h>
 #include <stdlib.h>
 
-#include <stdio.h>
-
 #define WIDTH 960
 #define HEIGHT 540
 #define RL_PROJECTION 0x1701
@@ -44,11 +42,11 @@ Vector3 boundingBoxOrigin(const Vector3 position, const Vector3 size) {
     return Vector3Subtract(position, halfSize);
 }
 
-bool isPlayerColliding(const Vector3 position, const Vector3 size) {
+bool isPlayerColliding(const Object object) {
     Vector3 playerOrigin = boundingBoxOrigin(player.position, player.size);
-    Vector3 objectOrigin = boundingBoxOrigin(position, size);
+    Vector3 objectOrigin = boundingBoxOrigin(object.position, object.size);
     Vector3 playerMax = boundingBoxMax(player.position, player.size);
-    Vector3 objectMax = boundingBoxMax(position, size);
+    Vector3 objectMax = boundingBoxMax(object.position, object.size);
 
     return (playerOrigin.x <= objectMax.x && playerMax.x >= objectOrigin.x) &&
         (playerOrigin.y <= objectMax.y && playerMax.y >= objectOrigin.y) &&
@@ -156,7 +154,7 @@ int main(){
 
         StartDisplay();
 
-        if (isPlayerColliding(redCube.position, redCube.size)) {
+        if (isPlayerColliding(redCube)) {
             player.position = (Vector3){20.f, 0.f, 0.f};
         }
 
