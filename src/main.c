@@ -60,7 +60,12 @@ void UpdatePlayer() {
     Vector2 delta = {mouseDelta.x/100, mouseDelta.y/100};
 
     player.theta.y = MODULO(player.theta.y-delta.y, 2*M_PI);
-    player.theta.x = MODULO(player.theta.x+delta.x, 2*M_PI);
+    player.theta.x = atan2f(player.target.z, player.target.x);
+
+    player.target = rotateVectorHorizontal(
+        rotateVectorVertical(player.target, -delta.y),
+        delta.x
+    );
 
     Vector3 direction = (Vector3){cosf(player.theta.x)*.25f, 0.f, sinf(player.theta.x)*.25f};
 
@@ -97,7 +102,7 @@ void StartDisplay() {
     rlMatrixMode(RL_MODELVIEW);
     rlLoadIdentity();
 
-    Matrix matView = MatrixLookAt(player.position, Vector3Add(getPlayerTarget(), player.position), (Vector3){0, 1, 0});
+    Matrix matView = MatrixLookAt(player.position, Vector3Add(player.position, player.target), (Vector3){0, 1, 0});
     rlMultMatrixf(MatrixToFloat(matView));
 
     rlEnableDepthTest();
