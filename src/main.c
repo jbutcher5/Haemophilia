@@ -19,12 +19,41 @@ typedef struct Player {
     Vector2 theta;
 } Player;
 
+typedef struct Object {
+    Vector3 position;
+    Vector3 size;
+} Object;
+
 static Player player = {
     (Vector3){0.f, 0.0f, 0.0f},
-    (Vector3){2.f, 2.f, 2.f},
+    (Vector3){.25f, .25f, .25f},
     (Vector3){1.f, 0.0f, 0.0f},
     (Vector2){0.f, 0.f}
 };
+
+Vector3 boundingBoxMax(const Vector3 position, const Vector3 size) {
+    Vector3 result;
+    Vector3 halfSize = (Vector3){size.x*.5f, size.y*.5f, size.z*.5f};
+
+    return Vector3Add(position, halfSize);
+}
+
+Vector3 boundingBoxOrigin(const Vector3 position, const Vector3 size) {
+    Vector3 halfSize = (Vector3){size.x*.5f, size.y*.5f, size.z*.5f};
+
+    return Vector3Subtract(position, halfSize);
+}
+
+bool isPlayerColliding(const Vector3 position, const Vector3 size) {
+    Vector3 playerOrigin = boundingBoxOrigin(player.position, player.size);
+    Vector3 objectOrigin = boundingBoxOrigin(position, size);
+    Vector3 playerMax = boundingBoxMax(player.position, player.size);
+    Vector3 objectMax = boundingBoxMax(position, size);
+
+    return (playerOrigin.x <= objectMax.x && playerMax.x >= objectOrigin.x) &&
+        (playerOrigin.y <= objectMax.y && playerMax.y >= objectOrigin.y) &&
+        (playerOrigin.z <= objectMax.z && playerMax.z >= objectOrigin.z);
+}
 
 Vector3 rotateVectorVertical(const Vector3 v, const float theta) {
     Vector3 result = v;
@@ -114,6 +143,9 @@ int main(){
 
     SetTargetFPS(60);
 
+    Object redCube = {(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
+    Object blueCube = {(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
+
     while (!WindowShouldClose()) {
 
         UpdatePlayer();
@@ -123,6 +155,10 @@ int main(){
         ClearBackground(RAYWHITE);
 
         StartDisplay();
+
+        if (isPlayerColliding(redCube.position, redCube.size)) {
+            player.position = (Vector3){20.f, 0.f, 0.f};
+        }
 
         DrawCubeV((Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}, RED);
         DrawCubeV((Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}, BLUE);
