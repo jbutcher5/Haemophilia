@@ -15,6 +15,7 @@ typedef struct Player {
     Vector3 size;
     Vector3 target;
     Vector2 theta;
+    bool isFalling;
 } Player;
 
 typedef struct Object {
@@ -163,6 +164,7 @@ int main(){
 
     Object redCube = {(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
     Object blueCube = {(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
+    Object floor = {(Vector3){0.f, -5.f, 0.f}, (Vector3){40.f, 1.f, 40.f}};
 
     while (!WindowShouldClose()) {
 
@@ -174,12 +176,9 @@ int main(){
 
         StartDisplay();
 
-        if (isPlayerColliding(redCube)) {
-            player.position = (Vector3){20.f, 0.f, 0.f};
-        }
-
         DrawCubeV((Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}, RED);
         DrawCubeV((Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}, BLUE);
+        DrawCubeV(floor.position, floor.size, GREEN);
 
         EndMode3D();
 
