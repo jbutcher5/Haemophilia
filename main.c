@@ -1,8 +1,6 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
-#include <math.h>
-#include <stdlib.h>
 
 #include "object.h"
 #include "player.h"
