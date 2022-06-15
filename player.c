@@ -4,8 +4,6 @@
 #include <math.h>
 #include "more_math.h"
 
-#define MODULO(a, n) fmod((a), (n)) + (((a) < 0) * (n))
-
 void UpdatePlayer(Player* player) {
     Vector2 mouseDelta = GetMouseDelta();
     Vector2 delta = {mouseDelta.x/100, -mouseDelta.y/100};
@@ -16,6 +14,7 @@ void UpdatePlayer(Player* player) {
     );
 
     player->theta.x = atan2f(player->target.z, player->target.x);
+
 
     player->target = rotateVector3(player->target, delta);
 
