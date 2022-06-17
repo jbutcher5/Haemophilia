@@ -1,5 +1,5 @@
 #pragma once
-#include <raylib.h>
+#include <raymath.h>
 
 Vector3 boundingBoxMax(const Vector3 position, const Vector3 size);
 Vector3 boundingBoxOrigin(const Vector3 position, const Vector3 size);

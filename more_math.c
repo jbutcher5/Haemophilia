@@ -5,15 +5,12 @@
 #include <stdlib.h>
 
 Vector3 boundingBoxMax(const Vector3 position, const Vector3 size) {
-    Vector3 result;
-    Vector3 halfSize = (Vector3){size.x*.5f, size.y*.5f, size.z*.5f};
-
+    Vector3 halfSize = {size.x*.5f, size.y*.5f, size.z*.5f};
     return Vector3Add(position, halfSize);
 }
 
 Vector3 boundingBoxOrigin(const Vector3 position, const Vector3 size) {
     Vector3 halfSize = (Vector3){size.x*.5f, size.y*.5f, size.z*.5f};
-
     return Vector3Subtract(position, halfSize);
 }
 
