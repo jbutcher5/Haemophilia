@@ -43,12 +43,14 @@ int main(){
 
     SetTargetFPS(60);
 
-    Object redCube = {(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
-    Object blueCube = {(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
-    Object floor = {(Vector3){0.f, -5.f, 0.f}, (Vector3){40.f, 1.f, 40.f}};
+    Object playerbox = {player.position, player.size, {0.f, 0.f}};
+    Object redCube = {(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}, {0.f, 0.f}};
+    Object blueCube = {(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}, {0.f, 0.f}};
+    Object floor = {(Vector3){0.f, -5.f, 0.f}, (Vector3){40.f, 1.f, 40.f}, {0.f, 0.f}};
 
     while (!WindowShouldClose()) {
         UpdatePlayer(&player);
+        playerbox.position = player.position;
 
         BeginDrawing();
 
