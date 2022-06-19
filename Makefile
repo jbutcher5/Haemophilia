@@ -5,7 +5,7 @@ OBJ = ${SRC:.c=.o}
 	clang -c -g $< -o $@
 
 build: ${OBJ}
-	clang $^ -lraylib -ldl -pthread -lGL -lm -o haemophilia
+	clang $^ -lraylib -ldl -pthread -lGL -lm -o -std=c11 haemophilia
 
 clean:
 	rm *.o
