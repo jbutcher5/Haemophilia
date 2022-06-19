@@ -1,4 +1,6 @@
-#pragma once
+#ifndef PLAYER
+#define PLAYER
+
 #include <raylib.h>
 #include "object.h"
 
@@ -11,4 +13,6 @@ typedef struct Player {
 } Player;
 
 void UpdatePlayer(Player* player);
-bool isPlayerColliding(Player* player, const Object object);
+bool isPlayerColliding(Player* player, const AABB object);
+
+#endif

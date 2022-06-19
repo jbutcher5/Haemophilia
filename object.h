@@ -1,11 +1,14 @@
-#pragma once
+#ifndef OBJECT
+#define OBJECT
+
 #include <raylib.h>
 
-typedef struct Object {
+typedef struct AABB {
     Vector3 position;
     Vector3 size;
-    Vector2 theta;
-} Object;
+} AABB;
 
-bool isObjectColliding(const Object a, const Object b);
-bool isPointColliding(const Vector3 point, const Object object);
+bool isAABBColliding(const AABB a, const AABB b);
+bool isPointColliding(const Vector3 point, const AABB box);
+
+#endif

@@ -1,9 +1,8 @@
 #include "object.h"
 #include "more_math.h"
-#include "player.h"
 #include <raylib.h>
 
-bool isObjectColliding(const Object a, const Object b) {
+bool isAABBColliding(const AABB a, const AABB b) {
     Vector3 aOrigin = boundingBoxOrigin(a.position, a.size);
     Vector3 bOrigin = boundingBoxOrigin(b.position, b.size);
     Vector3 aMax = boundingBoxMax(a.position, a.size);
@@ -14,9 +13,9 @@ bool isObjectColliding(const Object a, const Object b) {
         (aOrigin.z <= bMax.z && aMax.z >= bOrigin.z);
 }
 
-bool isPointColliding(const Vector3 point, const Object object) {
-    Vector3 objectOrigin = boundingBoxOrigin(object.position, object.size);
-    Vector3 objectMax = boundingBoxMax(object.position, object.size);
+bool isPointColliding(const Vector3 point, const AABB box) {
+    Vector3 objectOrigin = boundingBoxOrigin(box.position, box.size);
+    Vector3 objectMax = boundingBoxMax(box.position, box.size);
 
     return (point.x >= objectOrigin.x && point.x <= objectMax.x) &&
         (point.y >= objectOrigin.y && point.y <= objectMax.y) &&

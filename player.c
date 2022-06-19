@@ -1,6 +1,5 @@
 #include <raylib.h>
 #include "player.h"
-#include <raymath.h>
 #include <math.h>
 #include "more_math.h"
 
@@ -24,12 +23,12 @@ void UpdatePlayer(Player* player) {
         player->position = Vector3Add(player->position, direction);
 
     if (IsKeyDown(KEY_D)) {
-        Vector3 newDirection = rotateVector3(direction, (Vector2){M_PI/2, 0.f});
+        Vector3 newDirection = rotateVector3(direction, (Vector2){PI/2, 0.f});
         player->position = Vector3Add(player->position, newDirection);
     }
 
     if (IsKeyDown(KEY_A)) {
-        Vector3 newDirection = rotateVector3(direction, (Vector2){3*(M_PI/2), 0});
+        Vector3 newDirection = rotateVector3(direction, (Vector2){3*(PI/2), 0});
         player->position = Vector3Add(player->position, newDirection);
     }
 
