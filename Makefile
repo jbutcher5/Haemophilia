@@ -1,4 +1,4 @@
-SRC = main.c more_math.c object.c player.c
+SRC = main.c more_math.c aabb.c player.c
 OBJ = ${SRC:.c=.o}
 
 %.o: %.c

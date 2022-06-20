@@ -1,6 +1,6 @@
 #pragma once
 #include <raylib.h>
-#include "object.h"
+#include "aabb.h"
 
 typedef struct Player {
     Vector3 position;

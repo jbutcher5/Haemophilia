@@ -1,6 +1,7 @@
-#include "object.h"
-#include "more_math.h"
 #include <raylib.h>
+
+#include "aabb.h"
+#include "more_math.h"
 
 bool isAABBColliding(const AABB a, const AABB b) {
     Vector3 aOrigin = boundingBoxOrigin(a.position, a.size);

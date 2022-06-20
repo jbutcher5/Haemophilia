@@ -2,7 +2,7 @@
 #include <raymath.h>
 #include <rlgl.h>
 
-#include "object.h"
+#include "aabb.h"
 #include "player.h"
 
 #define WIDTH 960
