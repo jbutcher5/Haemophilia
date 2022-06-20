@@ -1,7 +1,8 @@
-#include <raylib.h>
-#include "player.h"
+#include <raymath.h>
 #include <math.h>
+
 #include "more_math.h"
+#include "player.h"
 
 void UpdatePlayer(Player* player) {
     Vector2 mouseDelta = GetMouseDelta();
