@@ -3,8 +3,7 @@
 #include "aabb.h"
 
 typedef struct Player {
-    Vector3 position;
-    Vector3 size;
+    AABB hitbox;
     Vector3 target;
     Vector2 theta;
     bool isFalling;

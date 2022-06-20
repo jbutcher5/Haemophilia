@@ -31,7 +31,7 @@ void StartDisplay() {
     rlMatrixMode(RL_MODELVIEW);
     rlLoadIdentity();
 
-    Matrix matView = MatrixLookAt(player.position, Vector3Add(player.position, player.target), (Vector3){0, 1, 0});
+    Matrix matView = MatrixLookAt(player.hitbox.position, Vector3Add(player.hitbox.position, player.target), (Vector3){0, 1, 0});
     rlMultMatrixf(MatrixToFloat(matView));
 
     rlEnableDepthTest();
@@ -43,14 +43,12 @@ int main(){
 
     SetTargetFPS(60);
 
-    AABB playerbox = {player.position, player.size};
     AABB redCube = {(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
     AABB blueCube = {(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
     AABB floor = {(Vector3){0.f, -5.f, 0.f}, (Vector3){40.f, 1.f, 40.f}};
 
     while (!WindowShouldClose()) {
         UpdatePlayer(&player);
-        playerbox.position = player.position;
 
         BeginDrawing();
 

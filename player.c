@@ -21,19 +21,19 @@ void UpdatePlayer(Player* player) {
     Vector3 direction = (Vector3){cosf(player->theta.x)*.25f, 0.f, sinf(player->theta.x)*.25f};
 
     if (IsKeyDown(KEY_W))
-        player->position = Vector3Add(player->position, direction);
+        player->hitbox.position = Vector3Add(player->hitbox.position, direction);
 
     if (IsKeyDown(KEY_D)) {
         Vector3 newDirection = rotateVector3(direction, (Vector2){PI/2, 0.f});
-        player->position = Vector3Add(player->position, newDirection);
+        player->hitbox.position = Vector3Add(player->hitbox.position, newDirection);
     }
 
     if (IsKeyDown(KEY_A)) {
         Vector3 newDirection = rotateVector3(direction, (Vector2){3*(PI/2), 0});
-        player->position = Vector3Add(player->position, newDirection);
+        player->hitbox.position = Vector3Add(player->hitbox.position, newDirection);
     }
 
     if (IsKeyDown(KEY_S))
-        player->position = Vector3Subtract(player->position, direction);
+        player->hitbox.position = Vector3Subtract(player->hitbox.position, direction);
 
 }
