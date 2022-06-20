@@ -1,9 +1,9 @@
-#include "more_math.h"
-#include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
 #include <math.h>
 #include <stdlib.h>
+
+#include "more_math.h"
 
 Vector3 boundingBoxMax(const Vector3 position, const Vector3 size) {
     Vector3 halfSize = {size.x*.5f, size.y*.5f, size.z*.5f};
