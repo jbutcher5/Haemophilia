@@ -7,7 +7,7 @@ typedef struct Player {
     Vector3 target;
     Vector2 theta;
     bool isFalling;
+    double startedFalling;
 } Player;
 
-void UpdatePlayer(Player* player);
-bool isPlayerColliding(Player* player, const AABB object);
+void UpdatePlayer(Player* player, AABB* objects, int n);
