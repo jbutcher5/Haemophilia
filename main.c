@@ -1,6 +1,7 @@
 #include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
+#include <stdlib.h>
 
 #include "aabb.h"
 #include "player.h"
@@ -43,12 +44,14 @@ int main(){
 
     SetTargetFPS(60);
 
-    AABB redCube = {(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
-    AABB blueCube = {(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
-    AABB floor = {(Vector3){0.f, -5.f, 0.f}, (Vector3){40.f, 1.f, 40.f}};
+    AABB* objects = malloc(sizeof(AABB)*3);
+
+    objects[0] = (AABB){(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
+    objects[1] = (AABB){(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
+    objects[2] = (AABB){(Vector3){0.f, -5.f, 0.f}, (Vector3){40.f, 1.f, 40.f}};
 
     while (!WindowShouldClose()) {
-        UpdatePlayer(&player);
+        UpdatePlayer(&player, objects, 3);
 
         BeginDrawing();
 
@@ -58,12 +61,14 @@ int main(){
 
         DrawCubeV((Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}, RED);
         DrawCubeV((Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}, BLUE);
-        DrawCubeV(floor.position, floor.size, GREEN);
+        DrawCubeV(objects[2].position, objects[2].size, GREEN);
 
         EndMode3D();
 
         EndDrawing();
     }
+
+    free(objects);
 
     CloseWindow();
 
