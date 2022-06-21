@@ -10,11 +10,11 @@
 #define HEIGHT 540
 #define RL_PROJECTION 0x1701
 
-static Player player = {
-    (Vector3){0.f, 0.0f, 0.0f},
-    (Vector3){.25f, .25f, .25f},
-    (Vector3){1.f, 0.0f, 0.0f},
-    (Vector2){0.f, 0.f}
+Player player = {
+    {{0.f, 0.0f, 0.0f},
+     {.25f, 2.f, .25f}},
+    {1.f, 0.0f, 0.0f},
+    {0.f, 0.f}
 };
 
 void StartDisplay() {
@@ -28,11 +28,14 @@ void StartDisplay() {
     double top = RL_CULL_DISTANCE_NEAR*tan(80*.4*DEG2RAD);
     double right = top*aspect;
 
+    Vector3 camera_position = player.hitbox.position;
+    camera_position.y += player.hitbox.size.y/2;
+
     rlFrustum(-right, right, -top, top, RL_CULL_DISTANCE_NEAR, RL_CULL_DISTANCE_FAR);
     rlMatrixMode(RL_MODELVIEW);
     rlLoadIdentity();
 
-    Matrix matView = MatrixLookAt(player.hitbox.position, Vector3Add(player.hitbox.position, player.target), (Vector3){0, 1, 0});
+    Matrix matView = MatrixLookAt(camera_position, Vector3Add(camera_position, player.target), (Vector3){0, 1, 0});
     rlMultMatrixf(MatrixToFloat(matView));
 
     rlEnableDepthTest();
