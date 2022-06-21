@@ -31,3 +31,7 @@ Vector3 rotateVector3(const Vector3 v, const Vector2 theta) {
 
     return result;
 }
+
+float fallingVelocity(float x) {
+   return fmaxf(-30*x, -120);
+}
