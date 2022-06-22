@@ -7,5 +7,8 @@ OBJ = ${SRC:.c=.o}
 build: ${OBJ}
 	clang $^ -lraylib -ldl -pthread -lGL -lm -o haemophilia
 
+format: ${SRC}
+	clang-format $^ -i
+
 clean:
 	rm *.o
