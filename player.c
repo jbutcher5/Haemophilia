@@ -9,6 +9,8 @@
 #define SIZE player->hitbox.size
 #define POSITION player->hitbox.position
 
+#include <stdio.h>
+
 void UpdatePlayer(Player* player, AABB* objects, int n) {
     Vector3 player_velocity = Vector3Zero();
 
@@ -45,25 +47,49 @@ void UpdatePlayer(Player* player, AABB* objects, int n) {
 
     player->target = rotateVector3(player->target, delta);
 
-    Vector3 direction = (Vector3){cosf(player->theta.x)*.25f, 0.f, sinf(player->theta.x)*.25f};
-
     // Horizontal Movements
 
-    if (IsKeyDown(KEY_W))
-        player->hitbox.position = Vector3Add(player->hitbox.position, direction);
+    Vector3 direction = Vector3Zero();
 
-    if (IsKeyDown(KEY_D)) {
-        Vector3 newDirection = rotateVector3(direction, (Vector2){PI/2, 0.f});
-        player->hitbox.position = Vector3Add(player->hitbox.position, newDirection);
-    }
+    float total_rotation = 0.f;
+    int keys_down = IsKeyDown(KEY_W) + IsKeyDown(KEY_D) + IsKeyDown(KEY_A) + IsKeyDown(KEY_S);
 
-    if (IsKeyDown(KEY_A)) {
-        Vector3 newDirection = rotateVector3(direction, (Vector2){3*(PI/2), 0});
-        player->hitbox.position = Vector3Add(player->hitbox.position, newDirection);
-    }
+    if (IsKeyDown(KEY_D))
+        total_rotation += TAU/4;
+
+    if (IsKeyDown(KEY_A))
+        total_rotation += TAU*.75f;
 
     if (IsKeyDown(KEY_S))
-        player->hitbox.position = Vector3Subtract(player->hitbox.position, direction);
+        total_rotation += PI;
+
+    if (IsKeyDown(KEY_A) && IsKeyDown(KEY_D)) {
+        total_rotation -= TAU;
+        keys_down -= 2;
+    }
+
+    if (IsKeyDown(KEY_S) && IsKeyDown(KEY_W)) {
+        total_rotation -= PI;
+        keys_down -= 2;
+    }
+
+    if (IsKeyDown(KEY_W) && total_rotation > PI)
+        total_rotation += TAU;
+
+    float mean_rotation = total_rotation/keys_down;
+
+    printf("%f %d %f\n", total_rotation, keys_down, mean_rotation);
+
+    if (keys_down)
+        direction = rotateVector3(
+            (Vector3){cosf(player->theta.x)*.25f, 0.f, sinf(player->theta.x)*.25f},
+            (Vector2){mean_rotation, 0.f}
+        );
+
+    direction.x *= 100.f;
+    direction.z *= 100.f;
+
+    player_velocity = Vector3Add(player_velocity, direction);
 
     // Update Position
 
