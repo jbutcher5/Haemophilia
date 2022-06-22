@@ -9,8 +9,6 @@
 #define SIZE player->hitbox.size
 #define POSITION player->hitbox.position
 
-#include <stdio.h>
-
 void UpdatePlayer(Player* player, AABB* objects, int n) {
     Vector3 player_velocity = Vector3Zero();
 
@@ -77,8 +75,6 @@ void UpdatePlayer(Player* player, AABB* objects, int n) {
         total_rotation += TAU;
 
     float mean_rotation = total_rotation/keys_down;
-
-    printf("%f %d %f\n", total_rotation, keys_down, mean_rotation);
 
     if (keys_down)
         direction = rotateVector3(

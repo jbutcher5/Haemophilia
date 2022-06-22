@@ -51,7 +51,7 @@ int main(){
 
     objects[0] = (AABB){(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
     objects[1] = (AABB){(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
-    objects[2] = (AABB){(Vector3){0.f, -5.f, 0.f}, (Vector3){40.f, 1.f, 40.f}};
+    objects[2] = (AABB){(Vector3){0.f, -5.f, 0.f}, (Vector3){400.f, 1.f, 400.f}};
 
     while (!WindowShouldClose()) {
         UpdatePlayer(&player, objects, 3);
@@ -69,6 +69,9 @@ int main(){
         EndMode3D();
 
         EndDrawing();
+
+        if (IsKeyPressed(KEY_J))
+            player.hitbox.position.y += 20.f;
     }
 
     free(objects);
