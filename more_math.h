@@ -1,7 +1,9 @@
 #pragma once
 #include <raymath.h>
 
-Vector3 boundingBoxMax(const Vector3 position, const Vector3 size);
-Vector3 boundingBoxOrigin(const Vector3 position, const Vector3 size);
-Vector3 rotateVector3(const Vector3 v, const Vector2 theta);
-float fallingVelocity(float x);
+#define TAU (PI*2)
+
+Vector3 BoundingBoxMax(const Vector3 position, const Vector3 size);
+Vector3 BoundingBoxOrigin(const Vector3 position, const Vector3 size);
+Vector3 RotateVector3(const Vector3 v, const Vector2 theta);
+float FallingVelocity(float x);

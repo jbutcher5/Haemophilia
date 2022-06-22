@@ -11,11 +11,7 @@
 #define RL_PROJECTION 0x1701
 
 Player player = {
-    {{0.f, 0.0f, 0.0f},
-     {.25f, 2.f, .25f}},
-    {1.f, 0.0f, 0.0f},
-    {0.f, 0.f}
-};
+    {{0.f, 0.0f, 0.0f}, {.25f, 2.f, .25f}}, {1.f, 0.0f, 0.0f}, {0.f, 0.f}};
 
 void StartDisplay() {
     rlDrawRenderBatchActive();
@@ -23,35 +19,39 @@ void StartDisplay() {
     rlPushMatrix();
     rlLoadIdentity();
 
-    float aspect = (float)WIDTH/(float)HEIGHT;
+    float aspect = (float)WIDTH / (float)HEIGHT;
 
-    double top = RL_CULL_DISTANCE_NEAR*tan(80*.4*DEG2RAD);
-    double right = top*aspect;
+    double top = RL_CULL_DISTANCE_NEAR * tan(80 * .4 * DEG2RAD);
+    double right = top * aspect;
 
     Vector3 camera_position = player.hitbox.position;
-    camera_position.y += player.hitbox.size.y/2;
+    camera_position.y += player.hitbox.size.y / 2;
 
-    rlFrustum(-right, right, -top, top, RL_CULL_DISTANCE_NEAR, RL_CULL_DISTANCE_FAR);
+    rlFrustum(-right, right, -top, top, RL_CULL_DISTANCE_NEAR,
+              RL_CULL_DISTANCE_FAR);
     rlMatrixMode(RL_MODELVIEW);
     rlLoadIdentity();
 
-    Matrix matView = MatrixLookAt(camera_position, Vector3Add(camera_position, player.target), (Vector3){0, 1, 0});
-    rlMultMatrixf(MatrixToFloat(matView));
+    Matrix mat_view = MatrixLookAt(camera_position,
+                                   Vector3Add(camera_position, player.target),
+                                   (Vector3){0, 1, 0});
+    rlMultMatrixf(MatrixToFloat(mat_view));
 
     rlEnableDepthTest();
 }
 
-int main(){
+int main() {
     InitWindow(WIDTH, HEIGHT, "Haemophilia");
     DisableCursor();
 
     SetTargetFPS(60);
 
-    AABB* objects = malloc(sizeof(AABB)*3);
+    AABB *objects = malloc(sizeof(AABB) * 3);
 
     objects[0] = (AABB){(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}};
     objects[1] = (AABB){(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
-    objects[2] = (AABB){(Vector3){0.f, -5.f, 0.f}, (Vector3){400.f, 1.f, 400.f}};
+    objects[2] =
+        (AABB){(Vector3){0.f, -5.f, 0.f}, (Vector3){400.f, 1.f, 400.f}};
 
     while (!WindowShouldClose()) {
         UpdatePlayer(&player, objects, 3);
