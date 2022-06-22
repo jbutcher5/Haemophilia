@@ -11,4 +11,4 @@ format: ${SRC}
 	clang-format $^ -i
 
 clean:
-	rm *.o
+	rm -p *.o
