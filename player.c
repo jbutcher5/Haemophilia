@@ -12,7 +12,7 @@
 void UpdatePlayer(Player *player, AABB *objects, int n) {
     Vector3 player_velocity = Vector3Zero();
 
-    // Check Collisions
+    // Check Falling
 
     AABB foot_collider = player->hitbox;
     foot_collider.position.y -= player->hitbox.size.y / 2;
@@ -20,17 +20,18 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
 
     bool previous = player->isFalling;
 
-    player->isFalling = true;
+    player->isFalling = !player->isJumping;
 
-    for (int object = 0; object < n; object++) {
-        if (IsAABBColliding(foot_collider, *(objects + object))) {
-            player->isFalling = false;
-            break;
-        }
-    }
+    for (int i = 0; i < n && player->isFalling; i++)
+        player->isFalling = !IsAABBColliding(foot_collider, objects[i]);
 
     if (!previous && player->isFalling)
         player->startedFalling = GetTime();
+
+    if (IsKeyPressed(KEY_SPACE)) {
+        player->isJumping = true;
+        player->startedJumping = GetTime();
+    }
 
     // Mouse Movements
 
@@ -92,6 +93,14 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
         player_velocity.y +=
             FallingVelocity(GetTime() - player->startedFalling);
     }
+
+    float dtime;
+    if (player->isJumping) {
+        player->isJumping = DoJumping((dtime = GetTime() - player->startedJumping));
+        player_velocity.y += JumpingVelocity(dtime);
+    }
+
+    printf("%i\n", player->isFalling);
 
     Vector3 delta_velocity = player_velocity;
 

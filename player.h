@@ -7,7 +7,9 @@ typedef struct Player {
     Vector3 target;
     Vector2 theta;
     bool isFalling;
+    bool isJumping;
     double startedFalling;
+    double startedJumping;
 } Player;
 
 void UpdatePlayer(Player* player, AABB* objects, int n);

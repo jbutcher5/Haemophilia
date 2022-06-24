@@ -33,4 +33,8 @@ Vector3 RotateVector3(const Vector3 v, const Vector2 theta) {
     return result;
 }
 
-float FallingVelocity(float x) { return fmaxf(-30 * x, -120); }
+float FallingVelocity(float x) { return -2*x; }
+
+float JumpingVelocity(float x) { return -2*(x - 5.477); }
+
+bool DoJumping(float x) { return x >= 0 && x <= 5.477; }

@@ -11,7 +11,7 @@
 #define RL_PROJECTION 0x1701
 
 Player player = {
-    {{0.f, 0.0f, 0.0f}, {.25f, 2.f, .25f}}, {1.f, 0.0f, 0.0f}, {0.f, 0.f}};
+    {{0.f, 0.0f, 0.0f}, {.25f, 2.f, .25f}}, {1.f, 0.0f, 0.0f}, {0.f, 0.f}, true, false, 0, 0};
 
 void StartDisplay() {
     rlDrawRenderBatchActive();
