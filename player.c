@@ -100,8 +100,6 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
         player_velocity.y += JumpingVelocity(dtime);
     }
 
-    printf("%i\n", player->isFalling);
-
     Vector3 delta_velocity = player_velocity;
 
     delta_velocity.x *= GetFrameTime();
