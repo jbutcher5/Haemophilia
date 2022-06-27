@@ -62,7 +62,7 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
     if (IsKeyDown(KEY_A))
         cartesian.z -= 1;
 
-    if (Vector3Length(cartesian) > 0.f) {
+    if (Vector3Length(cartesian)) {
         float rotation = atan2f(cartesian.z, cartesian.x);
         direction = RotateVector3(direction, (Vector2){rotation, 0.f});
         player_velocity = Vector3Add(player_velocity, direction);
