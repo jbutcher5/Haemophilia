@@ -47,45 +47,26 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
 
     // Horizontal Movements
 
-    Vector3 direction = Vector3Zero();
+    Vector3 direction = {cosf(player->theta.x)*100.f, 0.f, sinf(player->theta.x)*100.f};
+    Vector3 cartesian = Vector3Zero();
 
-    float total_rotation = 0.f;
-    int keys_down = IsKeyDown(KEY_W) + IsKeyDown(KEY_D) + IsKeyDown(KEY_A) +
-                    IsKeyDown(KEY_S);
-
-    if (IsKeyDown(KEY_D))
-        total_rotation += TAU / 4;
-
-    if (IsKeyDown(KEY_A))
-        total_rotation += TAU * .75f;
+    if (IsKeyDown(KEY_W))
+        cartesian.x += 1;
 
     if (IsKeyDown(KEY_S))
-        total_rotation += PI;
+        cartesian.x -= 1;
 
-    if (IsKeyDown(KEY_A) && IsKeyDown(KEY_D)) {
-        total_rotation -= TAU;
-        keys_down -= 2;
+    if (IsKeyDown(KEY_D))
+        cartesian.z += 1;
+
+    if (IsKeyDown(KEY_A))
+        cartesian.z -= 1;
+
+    if (Vector3Length(cartesian) > 0.f) {
+        float rotation = atan2f(cartesian.z, cartesian.x);
+        direction = RotateVector3(direction, (Vector2){rotation, 0.f});
+        player_velocity = Vector3Add(player_velocity, direction);
     }
-
-    if (IsKeyDown(KEY_S) && IsKeyDown(KEY_W)) {
-        total_rotation -= PI;
-        keys_down -= 2;
-    }
-
-    if (IsKeyDown(KEY_W) && total_rotation > PI)
-        total_rotation += TAU;
-
-    float mean_rotation = total_rotation / keys_down;
-
-    if (keys_down)
-        direction = RotateVector3((Vector3){cosf(player->theta.x) * .25f, 0.f,
-                                            sinf(player->theta.x) * .25f},
-                                  (Vector2){mean_rotation, 0.f});
-
-    direction.x *= 100.f;
-    direction.z *= 100.f;
-
-    player_velocity = Vector3Add(player_velocity, direction);
 
     // Update Position
 
