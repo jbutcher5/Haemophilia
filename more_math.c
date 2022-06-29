@@ -6,8 +6,11 @@
 #include "more_math.h"
 
 #define JUMPING_OFFSET .6
-#define JUMPING_MULTIPLYER 16
-#define FALLING_MULTIPLYER 16
+#define JUMPING_MULTIPLIER 16
+#define FALLING_MULTIPLIER 16
+#define RUNNING_OFFSET 20
+#define RUNNING_MULTIPLIER 15
+#define RUNNING_MAX 30.
 
 Vector3 BoundingBoxMax(const Vector3 position, const Vector3 size) {
     Vector3 half_size = {size.x * .5f, size.y * .5f, size.z * .5f};
@@ -37,8 +40,10 @@ Vector3 RotateVector3(const Vector3 v, const Vector2 theta) {
     return result;
 }
 
-float FallingVelocity(float x) { return -FALLING_MULTIPLYER*x; }
+float FallingVelocity(float x) { return -FALLING_MULTIPLIER*x; }
 
-float JumpingVelocity(float x) { return -JUMPING_MULTIPLYER*(x - JUMPING_OFFSET); }
+float JumpingVelocity(float x) { return -JUMPING_MULTIPLIER*(x - JUMPING_OFFSET); }
 
 bool DoJumping(float x) { return x >= 0 && x <= JUMPING_OFFSET; }
+
+float RunningVelocity(float x) { return fminf(x*RUNNING_MULTIPLIER + RUNNING_OFFSET, RUNNING_MAX); }

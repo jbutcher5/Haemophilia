@@ -18,14 +18,14 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
     foot_collider.position.y -= player->hitbox.size.y / 2;
     foot_collider.size.y = 0.01f;
 
-    bool previous = player->is_falling;
+    bool previous_falling = player->is_falling;
 
     player->is_falling = !player->is_jumping;
 
     for (int i = 0; i < n && player->is_falling; i++)
         player->is_falling = !IsAABBColliding(foot_collider, objects[i]);
 
-    if (!previous && player->is_falling)
+    if (!previous_falling && player->is_falling)
         player->started_falling = GetTime();
 
     if (IsKeyPressed(KEY_SPACE)) {
@@ -47,10 +47,21 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
 
     // Horizontal Movements
 
-    Vector3 direction = {cosf(player->theta.x)*100.f, 0.f, sinf(player->theta.x)*100.f};
+    bool previous_running = player->is_running;
+    player->is_running = IsKeyDown(KEY_W);
+
+    if (!previous_running && player->is_running)
+        player->started_running = GetTime();
+
+    float velocity_multiplyer = 15.f;
+
+    if (player->is_running)
+        velocity_multiplyer = RunningVelocity(GetTime() - player->started_running);
+
+    Vector3 direction = {cosf(player->theta.x)*velocity_multiplyer, 0.f, sinf(player->theta.x)*velocity_multiplyer};
     Vector3 cartesian = Vector3Zero();
 
-    if (IsKeyDown(KEY_W))
+    if (player->is_running)
         cartesian.x += 1;
 
     if (IsKeyDown(KEY_S))

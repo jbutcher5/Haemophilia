@@ -9,3 +9,4 @@ Vector3 RotateVector3(const Vector3 v, const Vector2 theta);
 float FallingVelocity(float x);
 float JumpingVelocity(float x);
 bool DoJumping(float x);
+float RunningVelocity(float x);
