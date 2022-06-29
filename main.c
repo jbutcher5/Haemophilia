@@ -69,9 +69,6 @@ int main() {
         EndMode3D();
 
         EndDrawing();
-
-        if (IsKeyPressed(KEY_J))
-            player.hitbox.position.y += 20.f;
     }
 
     free(objects);
