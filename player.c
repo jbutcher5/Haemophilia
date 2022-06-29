@@ -18,19 +18,19 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
     foot_collider.position.y -= player->hitbox.size.y / 2;
     foot_collider.size.y = 0.01f;
 
-    bool previous = player->isFalling;
+    bool previous = player->is_falling;
 
-    player->isFalling = !player->isJumping;
+    player->is_falling = !player->is_jumping;
 
-    for (int i = 0; i < n && player->isFalling; i++)
-        player->isFalling = !IsAABBColliding(foot_collider, objects[i]);
+    for (int i = 0; i < n && player->is_falling; i++)
+        player->is_falling = !IsAABBColliding(foot_collider, objects[i]);
 
-    if (!previous && player->isFalling)
-        player->startedFalling = GetTime();
+    if (!previous && player->is_falling)
+        player->started_falling = GetTime();
 
     if (IsKeyPressed(KEY_SPACE)) {
-        player->isJumping = true;
-        player->startedJumping = GetTime();
+        player->is_jumping = true;
+        player->started_jumping = GetTime();
     }
 
     // Mouse Movements
@@ -70,14 +70,14 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
 
     // Update Position
 
-    if (player->isFalling) {
+    if (player->is_falling) {
         player_velocity.y +=
-            FallingVelocity(GetTime() - player->startedFalling);
+            FallingVelocity(GetTime() - player->started_falling);
     }
 
     float dtime;
-    if (player->isJumping) {
-        player->isJumping = DoJumping((dtime = GetTime() - player->startedJumping));
+    if (player->is_jumping) {
+        player->is_jumping = DoJumping((dtime = GetTime() - player->started_jumping));
         player_velocity.y += JumpingVelocity(dtime);
     }
 

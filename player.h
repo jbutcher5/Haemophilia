@@ -6,10 +6,10 @@ typedef struct Player {
     AABB hitbox;
     Vector3 target;
     Vector2 theta;
-    bool isFalling;
-    bool isJumping;
-    double startedFalling;
-    double startedJumping;
+    bool is_falling;
+    bool is_jumping;
+    double started_falling;
+    double started_jumping;
 } Player;
 
 void UpdatePlayer(Player* player, AABB* objects, int n);
