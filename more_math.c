@@ -13,13 +13,11 @@
 #define RUNNING_MAX 30.
 
 Vector3 BoundingBoxMax(const Vector3 position, const Vector3 size) {
-    Vector3 half_size = {size.x * .5f, size.y * .5f, size.z * .5f};
-    return Vector3Add(position, half_size);
+    return Vector3Add(position, Vector3Scale(size, .5f));
 }
 
 Vector3 BoundingBoxOrigin(const Vector3 position, const Vector3 size) {
-    Vector3 half_size = (Vector3){size.x * .5f, size.y * .5f, size.z * .5f};
-    return Vector3Subtract(position, half_size);
+    return Vector3Subtract(position, Vector3Scale(size, .5f));
 }
 
 Vector3 RotateVector3(const Vector3 v, const Vector2 theta) {
