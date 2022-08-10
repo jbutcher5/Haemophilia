@@ -8,3 +8,4 @@ typedef struct AABB {
 
 bool IsAABBColliding(const AABB a, const AABB b);
 bool IsPointColliding(const Vector3 point, const AABB box);
+float BoxDistance(const Vector3 point, const AABB box);

@@ -1,4 +1,6 @@
 #include <raylib.h>
+#include <math.h>
+#include <raymath.h>
 
 #include "aabb.h"
 #include "more_math.h"
@@ -21,4 +23,15 @@ bool IsPointColliding(const Vector3 point, const AABB box) {
     return (point.x >= object_origin.x && point.x <= object_max.x) &&
            (point.y >= object_origin.y && point.y <= object_max.y) &&
            (point.z >= object_origin.z && point.z <= object_max.z);
+}
+
+float BoxDistance(Vector3 point, const AABB box) {
+    Vector3 half_size = Vector3Scale(box.size, .5f);
+    point = Vector3Subtract(point, box.position);
+
+    return sqrtf(
+        powf(fmaxf(fabsf(point.x) - half_size.x, 0), 2.f) +
+        powf(fmaxf(fabsf(point.y) - half_size.y, 0), 2.f) +
+        powf(fmaxf(fabsf(point.z) - half_size.z, 0), 2.f)
+    );
 }
