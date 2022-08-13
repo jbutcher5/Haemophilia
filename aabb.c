@@ -35,3 +35,19 @@ float BoxDistance(Vector3 point, const AABB box) {
         powf(fmaxf(fabsf(point.z) - half_size.z, 0), 2.f)
     );
 }
+
+AABB NewAABB(const Vector3 centre, const Vector3 size) {
+    return (AABB){centre, size, BoundingBoxOrigin(centre, size), BoundingBoxMax(centre, size)};
+}
+
+void UpdatePosition(AABB *box, const Vector3 delta) {
+    box->position = Vector3Add(box->position, delta);
+    box->min = Vector3Add(box->min, delta);
+    box->max = Vector3Add(box->max, delta);
+}
+
+void SetPosition(AABB *box, const Vector3 centre) {
+    box->position = centre;
+    box->min = Vector3Add(box->min, centre);
+    box->max = Vector3Add(box->max, centre);
+}
