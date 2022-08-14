@@ -15,8 +15,8 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
     // Check Falling
 
     AABB foot_collider = player->hitbox;
-    foot_collider.position.y -= player->hitbox.size.y / 2;
-    foot_collider.size.y = 0.01f;
+    UpdatePosition(&foot_collider, (Vector3){0.f, -player->hitbox.size.y / 2, 0.f});
+    SetSize(&foot_collider, (Vector3){player->hitbox.size.x, 0.01f, player->hitbox.size.z});
 
     bool previous_falling = player->is_falling;
 
@@ -92,12 +92,5 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
         player_velocity.y += JumpingVelocity(dtime);
     }
 
-    Vector3 delta_velocity = player_velocity;
-
-    delta_velocity.x *= GetFrameTime();
-    delta_velocity.y *= GetFrameTime();
-    delta_velocity.z *= GetFrameTime();
-
-    player->hitbox.position =
-        Vector3Add(player->hitbox.position, delta_velocity);
+    UpdatePosition(&player->hitbox, Vector3Scale(player_velocity, GetFrameTime()));
 }

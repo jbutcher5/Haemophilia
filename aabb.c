@@ -6,23 +6,15 @@
 #include "more_math.h"
 
 bool IsAABBColliding(const AABB a, const AABB b) {
-    Vector3 a_origin = BoundingBoxOrigin(a.position, a.size);
-    Vector3 b_origin = BoundingBoxOrigin(b.position, b.size);
-    Vector3 a_max = BoundingBoxMax(a.position, a.size);
-    Vector3 b_max = BoundingBoxMax(b.position, b.size);
-
-    return (a_origin.x <= b_max.x && a_max.x >= b_origin.x) &&
-           (a_origin.y <= b_max.y && a_max.y >= b_origin.y) &&
-           (a_origin.z <= b_max.z && a_max.z >= b_origin.z);
+    return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
+           (a.min.y <= b.max.y && a.max.y >= b.min.y) &&
+           (a.min.z <= b.max.z && a.max.z >= b.min.z);
 }
 
 bool IsPointColliding(const Vector3 point, const AABB box) {
-    Vector3 object_origin = BoundingBoxOrigin(box.position, box.size);
-    Vector3 object_max = BoundingBoxMax(box.position, box.size);
-
-    return (point.x >= object_origin.x && point.x <= object_max.x) &&
-           (point.y >= object_origin.y && point.y <= object_max.y) &&
-           (point.z >= object_origin.z && point.z <= object_max.z);
+    return (point.x >= box.min.x && point.x <= box.max.x) &&
+           (point.y >= box.min.y && point.y <= box.max.y) &&
+           (point.z >= box.min.z && point.z <= box.max.z);
 }
 
 float BoxDistance(Vector3 point, const AABB box) {
@@ -50,4 +42,8 @@ void SetPosition(AABB *box, const Vector3 centre) {
     box->position = centre;
     box->min = Vector3Add(box->min, centre);
     box->max = Vector3Add(box->max, centre);
+}
+
+void SetSize(AABB *box, const Vector3 size) {
+    *box = NewAABB(box->position, size);
 }
