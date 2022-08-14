@@ -38,10 +38,14 @@ Vector3 RotateVector3(const Vector3 v, const Vector2 theta) {
     return result;
 }
 
-float FallingVelocity(float x) { return -FALLING_MULTIPLIER*x; }
+float FallingVelocity(float x) { return -FALLING_MULTIPLIER * x; }
 
-float JumpingVelocity(float x) { return -JUMPING_MULTIPLIER*(x - JUMPING_OFFSET); }
+float JumpingVelocity(float x) {
+    return -JUMPING_MULTIPLIER * (x - JUMPING_OFFSET);
+}
 
 bool DoJumping(float x) { return x >= 0 && x <= JUMPING_OFFSET; }
 
-float RunningVelocity(float x) { return fminf(x*RUNNING_MULTIPLIER + RUNNING_OFFSET, RUNNING_MAX); }
+float RunningVelocity(float x) {
+    return fminf(x * RUNNING_MULTIPLIER + RUNNING_OFFSET, RUNNING_MAX);
+}

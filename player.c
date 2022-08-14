@@ -2,9 +2,9 @@
 #include <raylib.h>
 #include <raymath.h>
 
+#include "aabb.h"
 #include "more_math.h"
 #include "player.h"
-#include "aabb.h"
 
 #define SIZE player->hitbox.size
 #define POSITION player->hitbox.position
@@ -15,8 +15,10 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
     // Check Falling
 
     AABB foot_collider = player->hitbox;
-    UpdatePosition(&foot_collider, (Vector3){0.f, -player->hitbox.size.y / 2, 0.f});
-    SetSize(&foot_collider, (Vector3){player->hitbox.size.x, 0.01f, player->hitbox.size.z});
+    UpdatePosition(&foot_collider,
+                   (Vector3){0.f, -player->hitbox.size.y / 2, 0.f});
+    SetSize(&foot_collider,
+            (Vector3){player->hitbox.size.x, 0.01f, player->hitbox.size.z});
 
     bool previous_falling = player->is_falling;
 
@@ -56,9 +58,11 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
     float velocity_multiplyer = 15.f;
 
     if (player->is_running)
-        velocity_multiplyer = RunningVelocity(GetTime() - player->started_running);
+        velocity_multiplyer =
+            RunningVelocity(GetTime() - player->started_running);
 
-    Vector3 direction = {cosf(player->theta.x)*velocity_multiplyer, 0.f, sinf(player->theta.x)*velocity_multiplyer};
+    Vector3 direction = {cosf(player->theta.x) * velocity_multiplyer, 0.f,
+                         sinf(player->theta.x) * velocity_multiplyer};
     Vector3 cartesian = Vector3Zero();
 
     if (player->is_running)
@@ -88,9 +92,11 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
 
     float dtime;
     if (player->is_jumping) {
-        player->is_jumping = DoJumping((dtime = GetTime() - player->started_jumping));
+        player->is_jumping =
+            DoJumping((dtime = GetTime() - player->started_jumping));
         player_velocity.y += JumpingVelocity(dtime);
     }
 
-    UpdatePosition(&player->hitbox, Vector3Scale(player_velocity, GetFrameTime()));
+    UpdatePosition(&player->hitbox,
+                   Vector3Scale(player_velocity, GetFrameTime()));
 }

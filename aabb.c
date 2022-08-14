@@ -1,5 +1,5 @@
-#include <raylib.h>
 #include <math.h>
+#include <raylib.h>
 #include <raymath.h>
 
 #include "aabb.h"
@@ -21,15 +21,14 @@ float BoxDistance(Vector3 point, const AABB box) {
     Vector3 half_size = Vector3Scale(box.size, .5f);
     point = Vector3Subtract(point, box.position);
 
-    return sqrtf(
-        powf(fmaxf(fabsf(point.x) - half_size.x, 0), 2.f) +
-        powf(fmaxf(fabsf(point.y) - half_size.y, 0), 2.f) +
-        powf(fmaxf(fabsf(point.z) - half_size.z, 0), 2.f)
-    );
+    return sqrtf(powf(fmaxf(fabsf(point.x) - half_size.x, 0), 2.f) +
+                 powf(fmaxf(fabsf(point.y) - half_size.y, 0), 2.f) +
+                 powf(fmaxf(fabsf(point.z) - half_size.z, 0), 2.f));
 }
 
 AABB NewAABB(const Vector3 centre, const Vector3 size) {
-    return (AABB){centre, size, BoundingBoxMax(centre, size), BoundingBoxOrigin(centre, size)};
+    return (AABB){centre, size, BoundingBoxMax(centre, size),
+                  BoundingBoxOrigin(centre, size)};
 }
 
 void UpdatePosition(AABB *box, const Vector3 delta) {
