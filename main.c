@@ -11,7 +11,7 @@
 #define RL_PROJECTION 0x1701
 
 Player player = {
-    {{0.f, 0.f, 0.f}, {.25f, 2.f, .25f}, {0.f, 0.f, 0.f}, {0.f, 0.f, 0.f}}, {1.f, 0.f, 0.f}, {0.f, 0.f}, false, true, false, 0, 0, 0};
+    {{0.f, 0.f, 0.f}, {.25f, 2.f, .25f}, {0.125f, 1.f, 0.125f}, {-0.125f, -1.f, -0.125f}}, {1.f, 0.f, 0.f}, {0.f, 0.f}, false, true, false, 0, 0, 0};
 
 void StartDisplay() {
     rlDrawRenderBatchActive();
@@ -48,10 +48,9 @@ int main() {
 
     AABB *objects = malloc(sizeof(AABB) * 3);
 
-    objects[0] = (AABB){(Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}, (Vector3){0.f, 0.f, 0.f}, (Vector3){0.f, 0.0f, 0.0f}};
-    objects[1] = (AABB){(Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}};
-    objects[2] =
-        (AABB){(Vector3){0.f, -5.f, 0.f}, (Vector3){400.f, 1.f, 400.f}};
+    objects[0] = NewAABB((Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f});
+    objects[1] = NewAABB((Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f});
+    objects[2] = NewAABB((Vector3){0.f, -5.f, 0.f}, (Vector3){400.f, 1.f, 400.f});
 
     while (!WindowShouldClose()) {
         UpdatePlayer(&player, objects, 3);
@@ -62,8 +61,8 @@ int main() {
 
         StartDisplay();
 
-        DrawCubeV((Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f}, RED);
-        DrawCubeV((Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f}, BLUE);
+        DrawCubeV(objects[0].position, objects[0].size, RED);
+        DrawCubeV(objects[1].position, objects[1].size, BLUE);
         DrawCubeV(objects[2].position, objects[2].size, GREEN);
 
         EndMode3D();

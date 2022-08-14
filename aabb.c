@@ -37,7 +37,7 @@ float BoxDistance(Vector3 point, const AABB box) {
 }
 
 AABB NewAABB(const Vector3 centre, const Vector3 size) {
-    return (AABB){centre, size, BoundingBoxOrigin(centre, size), BoundingBoxMax(centre, size)};
+    return (AABB){centre, size, BoundingBoxMax(centre, size), BoundingBoxOrigin(centre, size)};
 }
 
 void UpdatePosition(AABB *box, const Vector3 delta) {
