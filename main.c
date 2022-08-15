@@ -78,7 +78,7 @@ int main() {
         DrawCubeV(objects[1].position, objects[1].size, colours[1]);
         DrawCubeV(objects[2].position, objects[2].size, colours[2]);
 
-        if (IsKeyDown(KEY_J)) {
+        if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             for (int i = 0; i < 3; i++) {
                 DrawRay(GetPlayerRay(&player), GREEN);
                 if (GetRayCollisionBox(GetPlayerRay(&player),
