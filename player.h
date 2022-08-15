@@ -15,3 +15,4 @@ typedef struct Player {
 } Player;
 
 void UpdatePlayer(Player* player, AABB* objects, int n);
+Ray GetPlayerRay(Player* player);

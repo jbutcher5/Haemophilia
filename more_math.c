@@ -3,8 +3,6 @@
 #include <rlgl.h>
 #include <stdlib.h>
 
-#include "more_math.h"
-
 #define JUMPING_OFFSET .6
 #define JUMPING_MULTIPLIER 16
 #define FALLING_MULTIPLIER 16

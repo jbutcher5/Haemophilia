@@ -46,3 +46,7 @@ void SetPosition(AABB *box, const Vector3 centre) {
 void SetSize(AABB *box, const Vector3 size) {
     *box = NewAABB(box->position, size);
 }
+
+BoundingBox AsBoundingBox(const AABB *box) {
+    return (BoundingBox){box->min, box->max};
+}

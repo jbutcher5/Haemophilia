@@ -15,3 +15,4 @@ AABB NewAABB(const Vector3 centre, const Vector3 size);
 void UpdatePosition(AABB *box, const Vector3 delta);
 void SetPosition(AABB *box, const Vector3 centre);
 void SetSize(AABB *box, const Vector3 size);
+BoundingBox AsBoundingBox(const AABB *box);

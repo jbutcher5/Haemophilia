@@ -63,6 +63,8 @@ int main() {
     objects[2] =
         NewAABB((Vector3){0.f, -5.f, 0.f}, (Vector3){400.f, 1.f, 400.f});
 
+    Color colours[3] = {BLUE, BLUE, BLUE};
+
     while (!WindowShouldClose()) {
         UpdatePlayer(&player, objects, 3);
 
@@ -72,9 +74,20 @@ int main() {
 
         StartDisplay();
 
-        DrawCubeV(objects[0].position, objects[0].size, RED);
-        DrawCubeV(objects[1].position, objects[1].size, BLUE);
-        DrawCubeV(objects[2].position, objects[2].size, GREEN);
+        DrawCubeV(objects[0].position, objects[0].size, colours[0]);
+        DrawCubeV(objects[1].position, objects[1].size, colours[1]);
+        DrawCubeV(objects[2].position, objects[2].size, colours[2]);
+
+        if (IsKeyDown(KEY_J)) {
+            for (int i = 0; i < 3; i++) {
+                DrawRay(GetPlayerRay(&player), GREEN);
+                if (GetRayCollisionBox(GetPlayerRay(&player),
+                                       AsBoundingBox(objects + i))
+                        .hit) {
+                    colours[i] = RED;
+                }
+            }
+        }
 
         EndMode3D();
 

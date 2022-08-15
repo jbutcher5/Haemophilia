@@ -100,3 +100,7 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
     UpdatePosition(&player->hitbox,
                    Vector3Scale(player_velocity, GetFrameTime()));
 }
+
+Ray GetPlayerRay(Player *player) {
+    return (Ray){player->hitbox.position, player->target};
+}
