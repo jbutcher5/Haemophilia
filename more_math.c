@@ -1,6 +1,8 @@
 #include <math.h>
+#include <raylib.h>
 #include <raymath.h>
 #include <rlgl.h>
+#include <stdio.h>
 #include <stdlib.h>
 
 #define JUMPING_OFFSET .6
@@ -14,8 +16,16 @@ Vector3 BoundingBoxMax(const Vector3 position, const Vector3 size) {
     return Vector3Add(position, Vector3Scale(size, .5f));
 }
 
-Vector3 BoundingBoxOrigin(const Vector3 position, const Vector3 size) {
+Vector3 BoundingBoxMin(const Vector3 position, const Vector3 size) {
     return Vector3Subtract(position, Vector3Scale(size, .5f));
+}
+
+Vector3 BoundingBoxSize(const BoundingBox box) {
+    return Vector3Subtract(box.max, box.min);
+}
+
+Vector3 BoundingBoxCentre(const BoundingBox box) {
+    return Vector3Subtract(box.max, Vector3Scale(BoundingBoxSize(box), .5f));
 }
 
 Vector3 RotateVector3(const Vector3 v, const Vector2 theta) {

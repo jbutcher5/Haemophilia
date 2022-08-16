@@ -4,16 +4,14 @@
 #include <stdlib.h>
 
 #include "aabb.h"
+#include "more_math.h"
 #include "player.h"
 
 #define WIDTH 960
 #define HEIGHT 540
 #define RL_PROJECTION 0x1701
 
-Player player = {{{0.f, 0.f, 0.f},
-                  {.25f, 2.f, .25f},
-                  {0.125f, 1.f, 0.125f},
-                  {-0.125f, -1.f, -0.125f}},
+Player player = {{{-0.125f, -1.f, -0.125f}, {0.125f, 1.f, 0.125f}},
                  {1.f, 0.f, 0.f},
                  {0.f, 0.f},
                  false,
@@ -34,8 +32,9 @@ void StartDisplay() {
     double top = RL_CULL_DISTANCE_NEAR * tan(80 * .4 * DEG2RAD);
     double right = top * aspect;
 
-    Vector3 camera_position = player.hitbox.position;
-    camera_position.y += player.hitbox.size.y / 2;
+    Vector3 camera_position = BoundingBoxCentre(player.hitbox);
+
+    camera_position.y += BoundingBoxSize(player.hitbox).y / 2;
 
     rlFrustum(-right, right, -top, top, RL_CULL_DISTANCE_NEAR,
               RL_CULL_DISTANCE_FAR);
@@ -56,14 +55,14 @@ int main() {
 
     SetTargetFPS(60);
 
-    AABB *objects = malloc(sizeof(AABB) * 3);
+    BoundingBox *objects = malloc(sizeof(BoundingBox) * 3);
 
     objects[0] = NewAABB((Vector3){2.f, 0.f, 0.f}, (Vector3){2.f, 2.f, 2.f});
     objects[1] = NewAABB((Vector3){0.f, 0.f, 4.f}, (Vector3){2.f, 3.f, 2.f});
     objects[2] =
         NewAABB((Vector3){0.f, -5.f, 0.f}, (Vector3){400.f, 1.f, 400.f});
 
-    Color colours[3] = {BLUE, BLUE, BLUE};
+    Color colours[3] = {GREEN, BROWN, BLUE};
 
     while (!WindowShouldClose()) {
         UpdatePlayer(&player, objects, 3);
@@ -74,16 +73,14 @@ int main() {
 
         StartDisplay();
 
-        DrawCubeV(objects[0].position, objects[0].size, colours[0]);
-        DrawCubeV(objects[1].position, objects[1].size, colours[1]);
-        DrawCubeV(objects[2].position, objects[2].size, colours[2]);
+        for (int i = 0; i < 3; i++)
+            DrawCubeV(BoundingBoxCentre(objects[i]),
+                      BoundingBoxSize(objects[i]), colours[i]);
 
         if (IsMouseButtonDown(MOUSE_BUTTON_LEFT)) {
             for (int i = 0; i < 3; i++) {
                 DrawRay(GetPlayerRay(&player), GREEN);
-                if (GetRayCollisionBox(GetPlayerRay(&player),
-                                       AsBoundingBox(objects + i))
-                        .hit) {
+                if (GetRayCollisionBox(GetPlayerRay(&player), objects[i]).hit) {
                     colours[i] = RED;
                 }
             }

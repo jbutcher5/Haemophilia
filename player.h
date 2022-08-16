@@ -1,9 +1,12 @@
 #pragma once
-#include <raylib.h>
 #include "aabb.h"
+#include <raylib.h>
+
+#define SIZE BoundingBoxSize(player->hitbox)
+#define POSITION BoundingBoxCentre(player->hitbox)
 
 typedef struct Player {
-    AABB hitbox;
+    BoundingBox hitbox;
     Vector3 target;
     Vector2 theta;
     bool is_running;
@@ -14,5 +17,5 @@ typedef struct Player {
     double started_jumping;
 } Player;
 
-void UpdatePlayer(Player* player, AABB* objects, int n);
-Ray GetPlayerRay(Player* player);
+void UpdatePlayer(Player *player, BoundingBox *objects, int n);
+Ray GetPlayerRay(Player *player);

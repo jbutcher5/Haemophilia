@@ -6,26 +6,21 @@
 #include "more_math.h"
 #include "player.h"
 
-#define SIZE player->hitbox.size
-#define POSITION player->hitbox.position
-
-void UpdatePlayer(Player *player, AABB *objects, int n) {
+void UpdatePlayer(Player *player, BoundingBox *objects, int n) {
     Vector3 player_velocity = Vector3Zero();
 
     // Check Falling
 
-    AABB foot_collider = player->hitbox;
-    UpdatePosition(&foot_collider,
-                   (Vector3){0.f, -player->hitbox.size.y / 2, 0.f});
-    SetSize(&foot_collider,
-            (Vector3){player->hitbox.size.x, 0.01f, player->hitbox.size.z});
+    BoundingBox foot_collider = player->hitbox;
+    UpdatePosition(&foot_collider, (Vector3){0.f, -SIZE.y / 2, 0.f});
+    SetSize(&foot_collider, (Vector3){SIZE.x, 0.01f, SIZE.z});
 
     bool previous_falling = player->is_falling;
 
     player->is_falling = !player->is_jumping;
 
     for (int i = 0; i < n && player->is_falling; i++)
-        player->is_falling = !IsAABBColliding(foot_collider, objects[i]);
+        player->is_falling = !CheckCollisionBoxes(foot_collider, objects[i]);
 
     if (!previous_falling && player->is_falling)
         player->started_falling = GetTime();
@@ -102,5 +97,5 @@ void UpdatePlayer(Player *player, AABB *objects, int n) {
 }
 
 Ray GetPlayerRay(Player *player) {
-    return (Ray){player->hitbox.position, player->target};
+    return (Ray){BoundingBoxCentre(player->hitbox), player->target};
 }

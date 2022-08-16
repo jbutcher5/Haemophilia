@@ -4,7 +4,7 @@
 
 #include "aabb.h"
 #include "more_math.h"
-
+/*
 bool IsAABBColliding(const AABB a, const AABB b) {
     return (a.min.x <= b.max.x && a.max.x >= b.min.x) &&
            (a.min.y <= b.max.y && a.max.y >= b.min.y) &&
@@ -25,28 +25,25 @@ float BoxDistance(Vector3 point, const AABB box) {
                  powf(fmaxf(fabsf(point.y) - half_size.y, 0), 2.f) +
                  powf(fmaxf(fabsf(point.z) - half_size.z, 0), 2.f));
 }
-
-AABB NewAABB(const Vector3 centre, const Vector3 size) {
-    return (AABB){centre, size, BoundingBoxMax(centre, size),
-                  BoundingBoxOrigin(centre, size)};
+*/
+BoundingBox NewAABB(const Vector3 centre, const Vector3 size) {
+    return (BoundingBox){BoundingBoxMin(centre, size),
+                         BoundingBoxMax(centre, size)};
 }
 
-void UpdatePosition(AABB *box, const Vector3 delta) {
-    box->position = Vector3Add(box->position, delta);
+void UpdatePosition(BoundingBox *box, const Vector3 delta) {
     box->min = Vector3Add(box->min, delta);
     box->max = Vector3Add(box->max, delta);
 }
 
-void SetPosition(AABB *box, const Vector3 centre) {
-    box->position = centre;
+void SetPosition(BoundingBox *box, const Vector3 centre) {
     box->min = Vector3Add(box->min, centre);
     box->max = Vector3Add(box->max, centre);
 }
 
-void SetSize(AABB *box, const Vector3 size) {
-    *box = NewAABB(box->position, size);
-}
+void SetSize(BoundingBox *box, const Vector3 size) {
+    Vector3 size_delta = Vector3Subtract(size, BoundingBoxSize(*box));
 
-BoundingBox AsBoundingBox(const AABB *box) {
-    return (BoundingBox){box->min, box->max};
+    box->min = Vector3Add(box->min, Vector3Scale(size_delta, -.5));
+    box->max = Vector3Add(box->max, Vector3Scale(size_delta, .5));
 }
