@@ -1,6 +1,8 @@
 #include <math.h>
 #include <raylib.h>
 #include <raymath.h>
+#include <stdio.h>
+#include <stdlib.h>
 
 #include "aabb.h"
 #include "more_math.h"
@@ -11,16 +13,25 @@ void UpdatePlayer(Player *player, BoundingBox *objects, int n) {
 
     // Check Falling
 
+    /// Create foot bounding box
+
     BoundingBox foot_collider = player->hitbox;
     UpdatePosition(&foot_collider, (Vector3){0.f, -SIZE.y / 2, 0.f});
     SetSize(&foot_collider, (Vector3){SIZE.x, 0.01f, SIZE.z});
 
+    /// Check if the foot bounding box is colliding with anything
+
     bool previous_falling = player->is_falling;
 
     player->is_falling = !player->is_jumping;
-
-    for (int i = 0; i < n && player->is_falling; i++)
+    int foot_colliding = -1;
+    for (int i = 0; i < n && player->is_falling; i++) {
         player->is_falling = !CheckCollisionBoxes(foot_collider, objects[i]);
+
+        if (!player->is_falling) {
+            foot_colliding = i;
+        }
+    }
 
     if (!previous_falling && player->is_falling)
         player->started_falling = GetTime();
@@ -90,6 +101,15 @@ void UpdatePlayer(Player *player, BoundingBox *objects, int n) {
         player->is_jumping =
             DoJumping((dtime = GetTime() - player->started_jumping));
         player_velocity.y += JumpingVelocity(dtime);
+    }
+
+    for (int i = 0; i < n; i++) {
+        if (i == foot_colliding && i >= 0) {
+            continue;
+        } else if (CheckCollisionBoxes(player->hitbox, objects[i])) {
+            player_velocity = (Vector3){0.f, player_velocity.y, 0.f};
+            break;
+        }
     }
 
     UpdatePosition(&player->hitbox,
