@@ -1,7 +1,6 @@
 #include <math.h>
 #include <raylib.h>
 #include <raymath.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 #include "aabb.h"
@@ -10,36 +9,7 @@
 
 void UpdatePlayer(Player *player, BoundingBox *objects, int n) {
     Vector3 player_velocity = Vector3Zero();
-
-    // Check Falling
-
-    /// Create foot bounding box
-
-    BoundingBox foot_collider = player->hitbox;
-    UpdatePosition(&foot_collider, (Vector3){0.f, -SIZE.y / 2, 0.f});
-    SetSize(&foot_collider, (Vector3){SIZE.x, 0.01f, SIZE.z});
-
-    /// Check if the foot bounding box is colliding with anything
-
-    bool previous_falling = player->is_falling;
-
-    player->is_falling = !player->is_jumping;
-    int foot_colliding = -1;
-    for (int i = 0; i < n && player->is_falling; i++) {
-        player->is_falling = !CheckCollisionBoxes(foot_collider, objects[i]);
-
-        if (!player->is_falling) {
-            foot_colliding = i;
-        }
-    }
-
-    if (!previous_falling && player->is_falling)
-        player->started_falling = GetTime();
-
-    if (IsKeyPressed(KEY_SPACE)) {
-        player->is_jumping = true;
-        player->started_jumping = GetTime();
-    }
+    float time = GetTime();
 
     // Mouse Movements
 
@@ -55,33 +25,28 @@ void UpdatePlayer(Player *player, BoundingBox *objects, int n) {
 
     // Horizontal Movements
 
-    bool previous_running = player->is_running;
-    player->is_running = IsKeyDown(KEY_W);
+    if (IsKeyPressed(KEY_SPACE) && !player->is_jumping && !player->is_falling) {
+        player->is_jumping = true;
+        player->started_jumping = time;
+    }
 
-    if (!previous_running && player->is_running)
-        player->started_running = GetTime();
+    if (IsKeyDown(KEY_W) && !player->is_running) {
+        player->is_running = true;
+        player->started_running = time;
+    }
 
     float velocity_multiplyer = 15.f;
 
     if (player->is_running)
-        velocity_multiplyer =
-            RunningVelocity(GetTime() - player->started_running);
+        velocity_multiplyer = RunningVelocity(time - player->started_running);
 
     Vector3 direction = {cosf(player->theta.x) * velocity_multiplyer, 0.f,
                          sinf(player->theta.x) * velocity_multiplyer};
-    Vector3 cartesian = Vector3Zero();
-
-    if (player->is_running)
-        cartesian.x += 1;
-
-    if (IsKeyDown(KEY_S))
-        cartesian.x -= 1;
-
-    if (IsKeyDown(KEY_D))
-        cartesian.z += 1;
-
-    if (IsKeyDown(KEY_A))
-        cartesian.z -= 1;
+    Vector3 cartesian = {
+        IsKeyDown(KEY_W) - IsKeyDown(KEY_S),
+        0.f,
+        IsKeyDown(KEY_D) - IsKeyDown(KEY_A),
+    };
 
     if (Vector3Length(cartesian)) {
         float rotation = atan2f(cartesian.z, cartesian.x);
@@ -92,23 +57,40 @@ void UpdatePlayer(Player *player, BoundingBox *objects, int n) {
     // Update Position
 
     if (player->is_falling) {
-        player_velocity.y +=
-            FallingVelocity(GetTime() - player->started_falling);
+        player_velocity.y += FallingVelocity(time - player->started_falling);
     }
 
-    float dtime;
     if (player->is_jumping) {
-        player->is_jumping =
-            DoJumping((dtime = GetTime() - player->started_jumping));
-        player_velocity.y += JumpingVelocity(dtime);
+        float jumping_delta = time - player->started_jumping;
+
+        player->is_jumping = DoJumping(jumping_delta);
+        player_velocity.y += JumpingVelocity(jumping_delta);
     }
+
+    BoundingBox foot_collider = player->hitbox;
+    UpdatePosition(&foot_collider, (Vector3){0.f, -SIZE.y / 2, 0.f});
+    SetSize(&foot_collider, (Vector3){SIZE.x, 0.01f, SIZE.z});
+
+    BoundingBox head_collider = player->hitbox;
+    UpdatePosition(&head_collider, (Vector3){0.f, SIZE.y / 2, 0.f});
+    SetSize(&head_collider, (Vector3){SIZE.x, 0.01f, SIZE.z});
 
     for (int i = 0; i < n; i++) {
-        if (i == foot_colliding && i >= 0) {
-            continue;
+        if (CheckCollisionBoxes(foot_collider, objects[i])) {
+            player->is_falling = false;
+        } else if (!CheckCollisionBoxes(foot_collider, objects[i]) &&
+                   !player->is_jumping) {
+            if (!player->is_falling) {
+                player->started_falling = time;
+            }
+
+            player->is_falling = true;
+        } else if (CheckCollisionBoxes(head_collider, objects[i])) {
+            player->is_falling = player->is_falling;
+            player->started_falling = time;
+            player->is_jumping = false;
         } else if (CheckCollisionBoxes(player->hitbox, objects[i])) {
             player_velocity = (Vector3){0.f, player_velocity.y, 0.f};
-            break;
         }
     }
 
