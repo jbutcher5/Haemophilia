@@ -1,3 +1,4 @@
+#include "player.h"
 #include <math.h>
 #include <raylib.h>
 #include <raymath.h>
@@ -51,7 +52,9 @@ float JumpingVelocity(float x) {
     return -JUMPING_MULTIPLIER * (x - JUMPING_OFFSET);
 }
 
-bool DoJumping(float x) { return x >= 0 && x <= JUMPING_OFFSET; }
+Movement DoJumping(float x) {
+    return (x >= 0 && x <= JUMPING_OFFSET) ? Jumping : Falling;
+}
 
 float RunningVelocity(float x) {
     return fminf(x * RUNNING_MULTIPLIER + RUNNING_OFFSET, RUNNING_MAX);

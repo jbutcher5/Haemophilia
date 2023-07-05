@@ -14,11 +14,7 @@
 Player player = {{{-0.125f, -1.f, -0.125f}, {0.125f, 1.f, 0.125f}},
                  {1.f, 0.f, 0.f},
                  {0.f, 0.f},
-                 false,
-                 true,
-                 false,
-                 0,
-                 0,
+                 Idle,
                  0};
 
 void StartDisplay() {

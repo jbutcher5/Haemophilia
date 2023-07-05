@@ -20,22 +20,24 @@ void MouseMovements(Player *player) {
 }
 
 void HorizontalMovement(Player *player, double time) {
-    if (IsKeyPressed(KEY_SPACE) && !player->is_jumping && !player->is_falling) {
-        player->is_jumping = true;
-        player->started_jumping = time;
+    if (IsKeyPressed(KEY_SPACE) && player->action != Falling &&
+        player->action != Jumping) {
+        player->action = Jumping;
+        player->action_update = time;
     }
 
-    if (IsKeyDown(KEY_W) && !player->is_running) {
-        player->is_running = true;
-        player->started_running = time;
+    if (IsKeyDown(KEY_W) &&
+        (player->action == Idle || player->action == Running)) {
+        player->action = Running;
+        player->action_update = time;
     }
 }
 
 void MovementCalc(Player *player, double time, Vector3 *player_velocity) {
     float velocity_multiplyer = 15.f;
 
-    if (player->is_running)
-        velocity_multiplyer = RunningVelocity(time - player->started_running);
+    if (player->action == Running)
+        velocity_multiplyer = RunningVelocity(time - player->action_update);
 
     Vector3 direction = {cosf(player->theta.x) * velocity_multiplyer, 0.f,
                          sinf(player->theta.x) * velocity_multiplyer};
@@ -53,15 +55,20 @@ void MovementCalc(Player *player, double time, Vector3 *player_velocity) {
 
     // Update Position
 
-    if (player->is_falling) {
-        player_velocity->y += FallingVelocity(time - player->started_falling);
+    if (player->action == Falling) {
+        player_velocity->y += FallingVelocity(time - player->action_update);
     }
 
-    if (player->is_jumping) {
-        float jumping_delta = time - player->started_jumping;
+    if (player->action == Jumping) {
+        float jumping_delta = time - player->action_update;
 
-        player->is_jumping = DoJumping(jumping_delta);
-        player_velocity->y += JumpingVelocity(jumping_delta);
+        player->action = DoJumping(jumping_delta);
+
+        if (player->action == Falling) {
+            player->action_update = time;
+        } else {
+            player_velocity->y += JumpingVelocity(jumping_delta);
+        }
     }
 }
 
@@ -76,24 +83,25 @@ void CollisionCalc(Player *player, double time, Vector3 *player_velocity,
     SetSize(&head_collider, (Vector3){SIZE.x, 0.01f, SIZE.z});
 
     for (int i = 0; i < n; i++) {
-        if (CheckCollisionBoxes(foot_collider, objects[i])) {
-            player->is_falling = false;
+        if (CheckCollisionBoxes(foot_collider, objects[i]) &&
+            player->action == Falling) {
+            player->action = Idle;
         } else if (CheckCollisionBoxes(head_collider, objects[i])) {
-            // UpdatePosition(&player->hitbox, (Vector3){0, -0.02, 0});
-            player->is_falling = player->is_falling;
-            player->started_falling = time;
-            player->is_jumping = false;
+            if (player_velocity->y > 0)
+                player_velocity->y = 0;
         } else if (CheckCollisionBoxes(player->hitbox, objects[i])) {
+            // TODO: Improve by checking if it is the x, z or both that needs to
+            // be zero'ed don't just do both
             *player_velocity = (Vector3){0.f, player_velocity->y, 0.f};
         }
 
         if (!CheckCollisionBoxes(foot_collider, objects[i]) &&
-            !player->is_jumping) {
-            if (!player->is_falling) {
-                player->started_falling = time;
+            player->action != Jumping) {
+            if (player->action != Falling) {
+                player->action_update = time;
             }
 
-            player->is_falling = true;
+            player->action = Falling;
         }
     }
 

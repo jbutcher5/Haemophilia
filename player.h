@@ -5,16 +5,19 @@
 #define SIZE BoundingBoxSize(player->hitbox)
 #define POSITION BoundingBoxCentre(player->hitbox)
 
+typedef enum {
+    Running,
+    Idle,
+    Falling,
+    Jumping,
+} Movement;
+
 typedef struct Player {
     BoundingBox hitbox;
     Vector3 target;
     Vector2 theta;
-    bool is_running;
-    bool is_falling;
-    bool is_jumping;
-    double started_running;
-    double started_falling;
-    double started_jumping;
+    Movement action;
+    double action_update;
 } Player;
 
 void UpdatePlayer(Player *player, BoundingBox *objects, int n);
