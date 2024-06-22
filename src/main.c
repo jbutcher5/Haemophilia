@@ -17,7 +17,7 @@ Player player = {{{-0.125f, -1.f, -0.125f}, {0.125f, 1.f, 0.125f}},
                  Idle,
                  0};
 
-void StartDisplay() {
+void StartDisplay(void) {
     rlDrawRenderBatchActive();
     rlMatrixMode(RL_PROJECTION);
     rlPushMatrix();
@@ -45,7 +45,7 @@ void StartDisplay() {
     rlEnableDepthTest();
 }
 
-int main() {
+int main(void) {
     InitWindow(WIDTH, HEIGHT, "Haemophilia");
     DisableCursor();
 
